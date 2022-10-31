@@ -8,6 +8,7 @@ public class OpActionSystem : MonoBehaviour
 {
     public static OpActionSystem Instance { get; private set; }
     public event EventHandler OnSelectedOpChanged;
+    public event EventHandler OnSelectedActionChanged;
 
 
     [SerializeField] private Operative selectedOp;
@@ -105,6 +106,7 @@ public class OpActionSystem : MonoBehaviour
                 Debug.Log("Set tape measure for measurement action.");
                 break;
         }
+        OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void SetBusy()
@@ -120,5 +122,9 @@ public class OpActionSystem : MonoBehaviour
     public Operative GetSelectedOp()
     {
         return selectedOp;
+    }
+
+    public BaseAction GetSelectedAction(){
+        return selectedAction;
     }
 }

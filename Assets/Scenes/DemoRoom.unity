@@ -506,6 +506,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &454241352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6997307321293424351, guid: 9def5babed083dd4789acee30e01c45e, type: 3}
+  m_PrefabInstance: {fileID: 944319606}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &498406331 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3627667154015802359, guid: 9def5babed083dd4789acee30e01c45e, type: 3}
@@ -1034,6 +1045,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7098595495971202782, guid: 9def5babed083dd4789acee30e01c45e, type: 3}
+      propertyPath: selectedBorder
+      value: 
+      objectReference: {fileID: 454241352}
     - target: {fileID: 8336420744013349053, guid: 9def5babed083dd4789acee30e01c45e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 0
