@@ -17,6 +17,7 @@ public class MeasuringTape : MonoBehaviour
         lineRend = GetComponentInChildren<LineRenderer>();
         lineRend.positionCount = 2;
         lineRend.enabled = false;
+
     }
 
     void Start()
@@ -39,10 +40,12 @@ public class MeasuringTape : MonoBehaviour
         lineSegments[4].endColor = Color.gray;
     }
 
-    public void RenderTape(){
+    public void RenderTape()
+    {
+
         lineSegments[0].enabled = true;
         mousePos = MouseWorld.GetPosition();
-        
+
         lineSegments[0].startColor = Color.black;
         distance = (mousePos - startPos).magnitude;
 
@@ -57,32 +60,36 @@ public class MeasuringTape : MonoBehaviour
         lineSegments[3].SetPosition(0, blue);
         lineSegments[4].SetPosition(0, red);
 
-        if (distance < 2.54f){
+        if (distance < 2.54f)
+        {
             lineSegments[0].SetPosition(1, mousePos);
-                        lineSegments[1].enabled = false;
+            lineSegments[1].enabled = false;
 
         }
-        else if (distance >= 2.54f && distance < 5.08f){
+        else if (distance >= 2.54f && distance < 5.08f)
+        {
             lineSegments[1].enabled = true;
             lineSegments[0].SetPosition(1, inch);
             lineSegments[1].SetPosition(0, inch);
             lineSegments[1].SetPosition(1, mousePos);
 
-        lineSegments[2].enabled = false;
-        lineSegments[3].enabled = false;
-        lineSegments[4].enabled = false;
+            lineSegments[2].enabled = false;
+            lineSegments[3].enabled = false;
+            lineSegments[4].enabled = false;
         }
-        else if (distance >= 5.08f && distance < 7.62f){
+        else if (distance >= 5.08f && distance < 7.62f)
+        {
             lineSegments[2].enabled = true;
             lineSegments[0].SetPosition(1, inch);
             lineSegments[1].SetPosition(0, inch);
             lineSegments[1].SetPosition(1, white);
             lineSegments[2].SetPosition(1, mousePos);
 
-        lineSegments[3].enabled = false;
-        lineSegments[4].enabled = false;
+            lineSegments[3].enabled = false;
+            lineSegments[4].enabled = false;
         }
-        else if (distance >= 7.62f && distance < 15.24f){
+        else if (distance >= 7.62f && distance < 15.24f)
+        {
             lineSegments[3].enabled = true;
             lineSegments[0].SetPosition(1, inch);
             lineSegments[1].SetPosition(0, inch);
@@ -90,9 +97,10 @@ public class MeasuringTape : MonoBehaviour
             lineSegments[2].SetPosition(1, blue);
             lineSegments[3].SetPosition(1, mousePos);
 
-        lineSegments[4].enabled = false;
+            lineSegments[4].enabled = false;
         }
-        else {
+        else
+        {
             lineSegments[4].enabled = true;
             lineSegments[0].SetPosition(1, inch);
             lineSegments[1].SetPosition(0, inch);
@@ -102,15 +110,17 @@ public class MeasuringTape : MonoBehaviour
             lineSegments[4].SetPosition(1, mousePos);
         }
     }
-    
-     private Vector2 GetPointAlongLine(float setDist){
-        float distRatio = setDist/distance;
-        float newX = (1-distRatio)*startPos.x + distRatio*mousePos.x;
-        float newY = (1-distRatio)*startPos.y + distRatio*mousePos.y;
+
+    private Vector2 GetPointAlongLine(float setDist)
+    {
+        float distRatio = setDist / distance;
+        float newX = (1 - distRatio) * startPos.x + distRatio * mousePos.x;
+        float newY = (1 - distRatio) * startPos.y + distRatio * mousePos.y;
         return new Vector2(newX, newY);
     }
 
-    public void DisableTape(){
+    public void DisableTape()
+    {
         lineSegments[0].enabled = false;
         lineSegments[1].enabled = false;
         lineSegments[2].enabled = false;
@@ -119,7 +129,9 @@ public class MeasuringTape : MonoBehaviour
     }
 
 
-    public void SetStartPos(Vector3 start){
+    public void SetStartPos(Vector3 start)
+    {
         startPos = start;
     }
+
 }

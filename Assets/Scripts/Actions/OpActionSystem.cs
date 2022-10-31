@@ -2,79 +2,123 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OpActionSystem : MonoBehaviour
 {
-    public static OpActionSystem Instance { get; private set;}
+    public static OpActionSystem Instance { get; private set; }
     public event EventHandler OnSelectedOpChanged;
-    [SerializeField] private Operative selectedOp; 
+
+
+    [SerializeField] private Operative selectedOp;
     [SerializeField] private LayerMask opLayerMask;
-    private MeasuringTape tape;
+
+    private BaseAction selectedAction;
+
+    [SerializeField] private MeasuringTape tape;
 
     private bool isBusy;
 
     private void Awake()
     {
-        if (Instance != null){
+        if (Instance != null)
+        {
             Debug.LogError("More than one Action System! " + Instance);
             Destroy(gameObject);
             return;
         }
         Instance = this;
-        tape = GetComponent<MeasuringTape>();
+        Debug.Log("Tape is: " + tape.name);
+    }
+
+    void Start()
+    {
+        SetSelectedOp(selectedOp);
     }
 
     void Update()
     {
         if (isBusy) return;
-        if (Input.GetMouseButtonDown(0)){
-            if (TryHandleUnitSelection()) return;
-            // selectedOp.GetMoveAction().ManageLimitingJoint(true);
-            // tape.SetStartPos(MouseWorld.GetPosition());
-            // selectedOp.GetMoveAction().SetStartPos();
-        }
-
-        // if (Input.GetMouseButton(0)){
-        //     selectedOp.GetMoveAction().MoveOperative(MouseWorld.GetPosition());
-        //     tape.RenderTape();
-        // }
-
-        // if (Input.GetMouseButtonUp(0)){
-        //     selectedOp.GetMoveAction().ManageLimitingJoint(false);
-        //     selectedOp.GetMoveAction().ChangeRemainingMove();
-        //     tape.DisableTape();
-        // }
-
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (TryHandleUnitSelection()) return;
+        HandleSelectedAction();
     }
 
-    private bool TryHandleUnitSelection(){
-        Vector3 mousePos = MouseWorld.GetPosition();
-        Collider2D target = Physics2D.OverlapPoint(mousePos, opLayerMask);
-        if (target)
-        if (target.transform.gameObject.TryGetComponent<Operative>(out Operative op)){
-            if (selectedOp == op) return false;
-            else{
-                SetSelectedOp(op);
-                return true;
+    private void HandleSelectedAction()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            switch (selectedAction)
+            {
+                case MoveAction moveAction:
+                    Debug.Log("Selected Move Action");
+                    break;
+                case FightAction fightAction:
+                    Debug.Log("Selected Fight Action");
+                    break;
+                case MeasureAction measureAction:
+                    Debug.Log("Selected Measure Action");
+                    break;
             }
+        }
+    }
+
+    private bool TryHandleUnitSelection()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePos = MouseWorld.GetPosition();
+            Collider2D target = Physics2D.OverlapPoint(mousePos, opLayerMask);
+            if (target)
+                if (target.transform.gameObject.TryGetComponent<Operative>(out Operative op))
+                {
+                    if (selectedOp == op) return false;
+                    else
+                    {
+                        SetSelectedOp(op);
+                        return true;
+                    }
+                }
         }
         return false;
     }
 
-    private void SetSelectedOp(Operative op){
+    private void SetSelectedOp(Operative op)
+    {
         selectedOp = op;
+        SetSelectedAction(op.GetMeasureAction());
         OnSelectedOpChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private void SetBusy(){
+    public void SetSelectedAction(BaseAction baseAction)
+    {
+        if (selectedAction) {
+            selectedAction.SetInactive();
+        }
+        selectedAction = baseAction;
+        selectedAction.SetActive();
+
+        switch(selectedAction)
+        {
+            case MeasureAction measureAction:
+                measureAction.SetMeasuringTape(tape);
+                Debug.Log("Set tape measure for measurement action.");
+                break;
+        }
+    }
+
+    private void SetBusy()
+    {
         isBusy = true;
     }
 
-    private void ClearBusy(){
+    private void ClearBusy()
+    {
         isBusy = false;
     }
 
-    public Operative GetSelectedOp(){
+    public Operative GetSelectedOp()
+    {
         return selectedOp;
     }
 }

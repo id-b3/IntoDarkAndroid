@@ -7,6 +7,7 @@ public class Operative : MonoBehaviour
 
     //Actions
     private MoveAction moveAction;
+    private MeasureAction measureAction;
     private BaseAction[] baseActionArray;
 
     private Rigidbody2D opBase;
@@ -16,6 +17,7 @@ public class Operative : MonoBehaviour
     {
         opBase = GetComponent<Rigidbody2D>();
         moveAction = GetComponent<MoveAction>();
+        measureAction = GetComponent<MeasureAction>();
         baseActionArray = GetComponents<BaseAction>();
     }
 
@@ -31,6 +33,10 @@ public class Operative : MonoBehaviour
 
     public MoveAction GetMoveAction(){
         return moveAction;
+    }
+
+    public MeasureAction GetMeasureAction(){
+        return measureAction;
     }
 
     public int GetMoveSpeed(){
