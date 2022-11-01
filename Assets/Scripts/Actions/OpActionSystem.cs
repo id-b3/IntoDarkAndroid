@@ -9,16 +9,16 @@ public class OpActionSystem : MonoBehaviour
     public static OpActionSystem Instance { get; private set; }
     public event EventHandler OnSelectedOpChanged;
     public event EventHandler OnSelectedActionChanged;
-
+    public event EventHandler OnActionTaken;
 
     [SerializeField] private Operative selectedOp;
     [SerializeField] private LayerMask opLayerMask;
+    [SerializeField] private MeasuringTape tape;
 
     private BaseAction selectedAction;
 
-    [SerializeField] private MeasuringTape tape;
-
     private bool isBusy;
+    private int actionPoints;
 
     private void Awake()
     {
@@ -29,7 +29,6 @@ public class OpActionSystem : MonoBehaviour
             return;
         }
         Instance = this;
-        Debug.Log("Tape is: " + tape.name);
     }
 
     void Start()
@@ -52,15 +51,13 @@ public class OpActionSystem : MonoBehaviour
             switch (selectedAction)
             {
                 case MoveAction moveAction:
-                    Debug.Log("Selected Move Action");
                     break;
                 case FightAction fightAction:
-                    Debug.Log("Selected Fight Action");
                     break;
                 case MeasureAction measureAction:
-                    Debug.Log("Selected Measure Action");
                     break;
             }
+            OnActionTaken?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -87,26 +84,31 @@ public class OpActionSystem : MonoBehaviour
     private void SetSelectedOp(Operative op)
     {
         selectedOp = op;
-        SetSelectedAction(op.GetMeasureAction());
+        SetSelectedAction(op.passAction);
         OnSelectedOpChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void SetSelectedAction(BaseAction baseAction)
     {
-        if (selectedAction) {
+        if (selectedAction)
+        {
             selectedAction.SetInactive();
         }
-        selectedAction = baseAction;
-        selectedAction.SetActive();
 
-        switch(selectedAction)
+        if (selectedOp.CanTakeAction(baseAction))
         {
-            case MeasureAction measureAction:
-                measureAction.SetMeasuringTape(tape);
-                Debug.Log("Set tape measure for measurement action.");
-                break;
+            selectedAction = baseAction;
+            selectedAction.SetActive();
+
+            switch (selectedAction)
+            {
+                case MeasureAction measureAction:
+                    measureAction.SetMeasuringTape(tape);
+                    break;
+            }
+            OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
         }
-        OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
+        else Debug.Log("No AP left for this operative.");
     }
 
     private void SetBusy()
@@ -124,7 +126,8 @@ public class OpActionSystem : MonoBehaviour
         return selectedOp;
     }
 
-    public BaseAction GetSelectedAction(){
+    public BaseAction GetSelectedAction()
+    {
         return selectedAction;
     }
 }

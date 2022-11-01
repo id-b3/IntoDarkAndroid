@@ -103,4 +103,8 @@ public class MoveAction : BaseAction
     {
         return "Move";
     }
+
+    public void ResetMovement(){
+        opMoveDist = op.GetMoveSpeed() * Constants.inch * 2;
+    }
 }

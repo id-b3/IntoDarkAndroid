@@ -19,11 +19,13 @@ public abstract class BaseAction : MonoBehaviour
 
     public virtual void SetActive(){
         isActive = true;
-        Debug.Log("Action Active");
     }
 
     public virtual void SetInactive(){
         isActive = false;
-        Debug.Log("Action Inactive");
+    }
+
+    public virtual int GetAPCost(){
+        return 1;
     }
 }

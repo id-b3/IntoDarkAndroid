@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootAction : BaseAction
+public class PassAction : BaseAction
 {
     // Start is called before the first frame update
     void Start()
@@ -13,14 +13,15 @@ public class ShootAction : BaseAction
     // Update is called once per frame
     void Update()
     {
-        if (isActive & Input.GetMouseButtonDown(1)){
-            op.ModifyAPL(true);
+        if (isActive){
+            if (Input.GetMouseButtonDown(1)){
+                op.UseActionPoints(GetAPCost());
+            }
         }
-        
     }
 
     public override string GetActionName()
     {
-        return "Shoot";
+        return "Pass";
     }
 }

@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class OpActionSystemUI : MonoBehaviour
 {
 
     [SerializeField] private Transform actionButtonPrefab;
     [SerializeField] private Transform actionButtonContainer;
+    [SerializeField] private TextMeshProUGUI actionPointsText;
     
     private List<ActionButtonUI> actionButtonUIList;
 
@@ -21,8 +23,13 @@ public class OpActionSystemUI : MonoBehaviour
     {
         OpActionSystem.Instance.OnSelectedOpChanged += OpActionSystem_OnSelectedOpChanged;
         OpActionSystem.Instance.OnSelectedActionChanged += OpActionSystem_OnSelectedActionChanged;
+        OpActionSystem.Instance.OnActionTaken += OpActionSystem_OnActionTaken;
+        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+        Operative.OnAnyActionPointsChanged += Operative_OnAnyActionPointsChanged;
+
         CreateOpActionButtons();
         UpdateSelectedVisual();
+        UpdateActionPointsVisual();
     }
 
     // Update is called once per frame
@@ -51,15 +58,34 @@ public class OpActionSystemUI : MonoBehaviour
     private void OpActionSystem_OnSelectedOpChanged(object sender, EventArgs e){
         CreateOpActionButtons();
         UpdateSelectedVisual();
+        UpdateActionPointsVisual();
     }
 
     private void OpActionSystem_OnSelectedActionChanged(object sender, EventArgs e){
         UpdateSelectedVisual();
     }
 
+    private void OpActionSystem_OnActionTaken(object sender, EventArgs e){
+        UpdateActionPointsVisual();
+    }
+
+    private void Operative_OnAnyActionPointsChanged(object sender, EventArgs e){
+        UpdateActionPointsVisual();
+    }
+
+    private void TurnSystem_OnTurnChanged(object sender, EventArgs e){
+        UpdateActionPointsVisual();
+    }
+
     private void UpdateSelectedVisual(){
         foreach (ActionButtonUI actionButtonUI in actionButtonUIList){
             actionButtonUI.UpdateSelectedVisual();
         }
+    }
+
+    private void UpdateActionPointsVisual(){
+        int apl = OpActionSystem.Instance.GetSelectedOp().modAPL;
+        int apLeft = OpActionSystem.Instance.GetSelectedOp().ActionPoints;
+        actionPointsText.text = "AP: " + apLeft + "/" + apl;
     }
 }

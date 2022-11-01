@@ -48,4 +48,8 @@ public class MeasureAction : BaseAction
         this.tape = measuringTape;
     }
 
+    public override int GetAPCost()
+    {
+        return 0;
+    }
 }
