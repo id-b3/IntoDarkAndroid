@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class OpActionSystem : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class OpActionSystem : MonoBehaviour
 
     private BaseAction selectedAction;
 
-    private bool isBusy;
     private int actionPoints;
 
     private void Awake()
@@ -38,10 +38,7 @@ public class OpActionSystem : MonoBehaviour
 
     void Update()
     {
-        if (isBusy) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (TryHandleUnitSelection()) return;
-        HandleSelectedAction();
+        //if (EventSystem.current.IsPointerOverGameObject()) return;
     }
 
     private void HandleSelectedAction()
@@ -61,31 +58,43 @@ public class OpActionSystem : MonoBehaviour
         }
     }
 
-    private bool TryHandleUnitSelection()
+    public void TryHandleUnitSelection(InputAction.CallbackContext context)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (context.phase != InputActionPhase.Performed) return;
         {
-            Vector3 touchPos = new Vector3(0,0,0); // MouseWorld.GetTouchPosition();
+            Debug.Log("Unit Selection");
+            Vector3 touchPos = CameraController.Instance.GetPointerPosition();
             Collider2D target = Physics2D.OverlapPoint(touchPos, opLayerMask);
             if (target)
+            {
                 if (target.transform.gameObject.TryGetComponent<Operative>(out Operative op))
                 {
-                    if (selectedOp == op) return false;
+                    if (selectedOp == op) return;
                     else
                     {
                         SetSelectedOp(op);
-                        return true;
+                        return;
                     }
                 }
+            }
+            Debug.Log("Deselecting All Ops");
+            SetSelectedOp(null);
+
         }
-        return false;
     }
 
     private void SetSelectedOp(Operative op)
     {
         selectedOp = op;
-        SetSelectedAction(op.passAction);
-        OnSelectedOpChanged?.Invoke(this, EventArgs.Empty);
+        if (OpIsSelected())
+        {
+            SetSelectedAction(op.passAction);
+        }
+        else
+        {
+            selectedAction.SetInactive();
+        }
+            OnSelectedOpChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void SetSelectedAction(BaseAction baseAction)
@@ -102,23 +111,12 @@ public class OpActionSystem : MonoBehaviour
 
             switch (selectedAction)
             {
-                case MeasureAction measureAction:
-                    measureAction.SetMeasuringTape(tape);
+                case PassAction passAction:
                     break;
             }
             OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
         }
         else Debug.Log("No AP left for this operative.");
-    }
-
-    private void SetBusy()
-    {
-        isBusy = true;
-    }
-
-    private void ClearBusy()
-    {
-        isBusy = false;
     }
 
     public Operative GetSelectedOp()
@@ -129,5 +127,10 @@ public class OpActionSystem : MonoBehaviour
     public BaseAction GetSelectedAction()
     {
         return selectedAction;
+    }
+
+    public bool OpIsSelected()
+    {
+        return selectedOp != null;
     }
 }

@@ -90,7 +90,6 @@ public class Operative : MonoBehaviour
         }
     }
 
-
     public bool CanTakeAction(BaseAction selectedAction)
     {
         return ActionPoints >= selectedAction.GetAPCost();

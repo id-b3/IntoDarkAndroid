@@ -19,18 +19,12 @@ public class SelectedVisual : MonoBehaviour
         UpdateVisual();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OperativeActionSystem_OnSelectOpChange(object sender, EventArgs empty){
         UpdateVisual();
     }
 
     private void UpdateVisual(){
-        if (operative == OpActionSystem.Instance.GetSelectedOp()){
+        if (OpActionSystem.Instance.OpIsSelected() & operative == OpActionSystem.Instance.GetSelectedOp()){
             spriteRenderer.enabled = true;
         }
         else spriteRenderer.enabled = false;

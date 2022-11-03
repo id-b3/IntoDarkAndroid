@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 6426129332006194787}
   - component: {fileID: 1910686256681014733}
   - component: {fileID: 629314332223272984}
-  - component: {fileID: 6443206088814010564}
   - component: {fileID: 4652636175903728876}
   m_Layer: 6
   m_Name: Operative
@@ -92,13 +91,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019a2c51c07f1d5438668bda9c0df0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
-  actionPointLimit: 0
   groupActivation: 0
   defence: 0
   normSave: 0
   invulnSave: 0
-  wounds: 0
   baseSize: 0
 --- !u!114 &3456842794729381739
 MonoBehaviour:
@@ -158,18 +154,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd413890e10157840b7a90ea13c11a93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6443206088814010564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3508512974601399663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11f2c02bf9f81ac4c947b29d5fcbad52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!232 &4652636175903728876

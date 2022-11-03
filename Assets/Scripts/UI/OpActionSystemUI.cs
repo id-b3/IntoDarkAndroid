@@ -45,13 +45,19 @@ public class OpActionSystemUI : MonoBehaviour
 
         actionButtonUIList.Clear();
 
-        Operative op = OpActionSystem.Instance.GetSelectedOp();
-        foreach (BaseAction action in op.GetBaseActions()){
-            Transform actionButtonTransform = Instantiate(actionButtonPrefab, actionButtonContainer);
-            ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
-            actionButtonUI.SetBaseAction(action);
+        if (!OpActionSystem.Instance.OpIsSelected())
+        {
+            return;
+        }
+        {
+            foreach (BaseAction action in OpActionSystem.Instance.GetSelectedOp().GetBaseActions())
+            {
+                Transform actionButtonTransform = Instantiate(actionButtonPrefab, actionButtonContainer);
+                ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();
+                actionButtonUI.SetBaseAction(action);
 
-            actionButtonUIList.Add(actionButtonUI);
+                actionButtonUIList.Add(actionButtonUI);
+            }
         }
     }
 
@@ -84,8 +90,14 @@ public class OpActionSystemUI : MonoBehaviour
     }
 
     private void UpdateActionPointsVisual(){
+        if (!OpActionSystem.Instance.OpIsSelected())
+        {
+            actionPointsText.enabled = false;
+            return;
+        }
         int apl = OpActionSystem.Instance.GetSelectedOp().modAPL;
         int apLeft = OpActionSystem.Instance.GetSelectedOp().ActionPoints;
         actionPointsText.text = "AP: " + apLeft + "/" + apl;
+        actionPointsText.enabled = true;
     }
 }
