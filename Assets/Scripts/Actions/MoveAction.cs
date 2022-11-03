@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class MoveAction : BaseAction
 {
@@ -13,6 +14,7 @@ public class MoveAction : BaseAction
     private float opMoveDist;
     private float distMoved;
 
+    private Vector3 originalPosition;
     private Vector3 startingPosition;
     private Vector3 offset;
 
@@ -32,7 +34,7 @@ public class MoveAction : BaseAction
 
         if (isActive)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Touchscreen.current.primaryTouch.IsPressed())
             {
                 if (EventSystem.current.IsPointerOverGameObject()) return;
                 if (!moving)
@@ -45,7 +47,7 @@ public class MoveAction : BaseAction
             }
             if (Input.GetMouseButton(0))
             {
-                if (moving) MoveOperative(MouseWorld.GetPosition());
+                if (moving) MoveOperative(new Vector3(0,0,0)); //MouseWorld
             }
             else if (Input.GetMouseButtonUp(0))
             {
@@ -60,14 +62,14 @@ public class MoveAction : BaseAction
 
     }
 
-    public void MoveOperative(Vector3 pos)
+    public void MoveOperative(Vector2 pos)
     {
-        Vector2 distance = startingPosition - MouseWorld.GetPosition();
+        Vector2 distance = (Vector2) startingPosition - pos;
         distMoved = distance.magnitude;
 
         if (distMoved > opMoveDist) return;
         else if (opMoveDist == 0) return;
-        else op.GetOpBase().MovePosition(pos + offset);
+        else op.GetOpBase().MovePosition(pos + (Vector2)offset);
     }
 
     public void ManageLimitingJoint(bool enableJoint)
@@ -84,7 +86,7 @@ public class MoveAction : BaseAction
     public void SetStartPos()
     {
         startingPosition = op.transform.position;
-        offset = startingPosition - MouseWorld.GetPosition();
+        offset = startingPosition - new Vector3(0,0,0); //MouseWorld.GetTouchPosition();
     }
 
     public void ChangeRemainingMove(Vector3 endPos)
@@ -106,5 +108,11 @@ public class MoveAction : BaseAction
 
     public void ResetMovement(){
         opMoveDist = op.GetMoveSpeed() * Constants.inch * 2;
+    }
+
+    public override void SetActive()
+    {
+        originalPosition = op.transform.position;
+        base.SetActive();
     }
 }

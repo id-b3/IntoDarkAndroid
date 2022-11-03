@@ -23,7 +23,7 @@ public class MeasureAction : BaseAction
             {
                 if (EventSystem.current.IsPointerOverGameObject()) return;
                 measuring = true;
-                tape.SetStartPos(MouseWorld.GetPosition());
+                tape.SetStartPos(new Vector3(0,0,0)); //InputWorld.tempVector3);
             }
             else if (Input.GetMouseButton(0) && measuring)
             {

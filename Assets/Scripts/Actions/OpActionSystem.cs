@@ -65,8 +65,8 @@ public class OpActionSystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 mousePos = MouseWorld.GetPosition();
-            Collider2D target = Physics2D.OverlapPoint(mousePos, opLayerMask);
+            Vector3 touchPos = new Vector3(0,0,0); // MouseWorld.GetTouchPosition();
+            Collider2D target = Physics2D.OverlapPoint(touchPos, opLayerMask);
             if (target)
                 if (target.transform.gameObject.TryGetComponent<Operative>(out Operative op))
                 {

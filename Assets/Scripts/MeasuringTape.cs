@@ -5,7 +5,7 @@ using UnityEngine;
 public class MeasuringTape : MonoBehaviour
 {
     private LineRenderer lineRend;
-    private Vector2 mousePos;
+    private Vector2 touchPos;
     private Vector2 startPos;
     private float distance;
     private List<LineRenderer> lineSegments;
@@ -44,10 +44,10 @@ public class MeasuringTape : MonoBehaviour
     {
 
         lineSegments[0].enabled = true;
-        mousePos = MouseWorld.GetPosition();
+        touchPos = new Vector3(0,0,0); //MouseWorld.GetTouchPosition();
 
         lineSegments[0].startColor = Color.black;
-        distance = (mousePos - startPos).magnitude;
+        distance = (touchPos - startPos).magnitude;
 
         inch = GetPointAlongLine(Constants.inch);
         white = GetPointAlongLine(Constants.circleM);
@@ -62,7 +62,7 @@ public class MeasuringTape : MonoBehaviour
 
         if (distance < 2.54f)
         {
-            lineSegments[0].SetPosition(1, mousePos);
+            lineSegments[0].SetPosition(1, touchPos);
             lineSegments[1].enabled = false;
 
         }
@@ -71,7 +71,7 @@ public class MeasuringTape : MonoBehaviour
             lineSegments[1].enabled = true;
             lineSegments[0].SetPosition(1, inch);
             lineSegments[1].SetPosition(0, inch);
-            lineSegments[1].SetPosition(1, mousePos);
+            lineSegments[1].SetPosition(1, touchPos);
 
             lineSegments[2].enabled = false;
             lineSegments[3].enabled = false;
@@ -83,7 +83,7 @@ public class MeasuringTape : MonoBehaviour
             lineSegments[0].SetPosition(1, inch);
             lineSegments[1].SetPosition(0, inch);
             lineSegments[1].SetPosition(1, white);
-            lineSegments[2].SetPosition(1, mousePos);
+            lineSegments[2].SetPosition(1, touchPos);
 
             lineSegments[3].enabled = false;
             lineSegments[4].enabled = false;
@@ -95,7 +95,7 @@ public class MeasuringTape : MonoBehaviour
             lineSegments[1].SetPosition(0, inch);
             lineSegments[1].SetPosition(1, white);
             lineSegments[2].SetPosition(1, blue);
-            lineSegments[3].SetPosition(1, mousePos);
+            lineSegments[3].SetPosition(1, touchPos);
 
             lineSegments[4].enabled = false;
         }
@@ -107,15 +107,15 @@ public class MeasuringTape : MonoBehaviour
             lineSegments[1].SetPosition(1, white);
             lineSegments[2].SetPosition(1, blue);
             lineSegments[3].SetPosition(1, red);
-            lineSegments[4].SetPosition(1, mousePos);
+            lineSegments[4].SetPosition(1, touchPos);
         }
     }
 
     private Vector2 GetPointAlongLine(float setDist)
     {
         float distRatio = setDist / distance;
-        float newX = (1 - distRatio) * startPos.x + distRatio * mousePos.x;
-        float newY = (1 - distRatio) * startPos.y + distRatio * mousePos.y;
+        float newX = (1 - distRatio) * startPos.x + distRatio * touchPos.x;
+        float newY = (1 - distRatio) * startPos.y + distRatio * touchPos.y;
         return new Vector2(newX, newY);
     }
 

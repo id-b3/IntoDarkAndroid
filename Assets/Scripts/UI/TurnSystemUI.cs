@@ -18,7 +18,6 @@ public class TurnSystemUI : MonoBehaviour
         });
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
-
         UpdateTurnText();
     }
 
