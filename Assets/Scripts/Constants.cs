@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class Constants : MonoBehaviour
+public static class Constants
 {
     public const float inch = 2.54f;
     public const float circleM = 5.08f;

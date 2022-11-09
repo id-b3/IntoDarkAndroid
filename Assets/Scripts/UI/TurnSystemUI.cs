@@ -14,7 +14,7 @@ public class TurnSystemUI : MonoBehaviour
 
     private void Start(){
         endActivationButton.onClick.AddListener(() => {
-            TurnSystem.Instance.NextTurn();
+            TurnSystem.Instance.FinishActivation();
         });
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
@@ -22,7 +22,14 @@ public class TurnSystemUI : MonoBehaviour
     }
 
     private void UpdateTurnText(){
-        turnNumberText.text = "TURN " + TurnSystem.Instance.turnNumber;
+        if (TurnSystem.Instance.TurnNumber < 5)
+        {
+            turnNumberText.text = "TURN " + TurnSystem.Instance.TurnNumber;
+        }
+        else
+        {
+            turnNumberText.text = "Game Over";
+        }
     }
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e){

@@ -4,19 +4,20 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - LevelBounds
   - Operative
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Map
+  - 
   - Water
   - UI
   - Operative
-  - 
-  - 
-  - 
-  - 
+  - Engagement
+  - Objectives
+  - Terrain
+  - Dropzones
   - 
   - 
   - 
@@ -39,15 +40,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Map
-    uniqueID: 1208541283
-    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Operatives
-    uniqueID: 336160839
+  - name: Map
+    uniqueID: 1798043625
+    locked: 0
+  - name: Scatter
+    uniqueID: 2296623839
+    locked: 0
+  - name: Operative
+    uniqueID: 1603220759
     locked: 0
   - name: Terrain
-    uniqueID: 1513645187
+    uniqueID: 47421343
+    locked: 0
+  - name: Info
+    uniqueID: 961700441
     locked: 0

@@ -95,7 +95,7 @@ public class OpActionSystemUI : MonoBehaviour
             actionPointsText.enabled = false;
             return;
         }
-        int apl = OpActionSystem.Instance.GetSelectedOp().modAPL;
+        int apl = OpActionSystem.Instance.GetSelectedOp().ModAPL;
         int apLeft = OpActionSystem.Instance.GetSelectedOp().ActionPoints;
         actionPointsText.text = "AP: " + apLeft + "/" + apl;
         actionPointsText.enabled = true;

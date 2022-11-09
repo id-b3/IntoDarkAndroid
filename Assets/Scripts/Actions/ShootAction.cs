@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class ShootAction : BaseAction
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void ShootWeapon(Weapon weapon)
     {
-        if (isActive & Input.GetMouseButtonDown(1)){
-            op.ModifyAPL(true);
+        if (weapon.Ranged)
+        {
+            for (int i = 0; i < weapon.Attacks; i++)
+            {
+                string hit = "Miss!";
+                int d6 = Random.Range(1, 7);
+                if (d6 >= weapon.Skill) { hit = "Hit!"; }
+                Debug.Log("Attack " + i + " " + d6 + " " + hit);
+            }
         }
-        
     }
 
     public override string GetActionName()

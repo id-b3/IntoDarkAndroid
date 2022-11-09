@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Lean.Touch;
 
 public class MoveAction : BaseAction
 {
 
     public delegate void MovingDelegate();
+
+    [SerializeField] private LeanDragTranslateRigidbody2D dragger;
 
     private DistanceJoint2D limiter;
 
@@ -16,64 +19,36 @@ public class MoveAction : BaseAction
 
     private Vector3 originalPosition;
     private Vector3 startingPosition;
-    private Vector3 offset;
 
-    private bool moving;
-
+    //private bool moving;
 
     protected override void Awake()
     {
         base.Awake();
-        opMoveDist = op.GetMoveSpeed() * Constants.inch * 2;
+        
         limiter = GetComponent<DistanceJoint2D>();
-        moving = false;
+        //moving = false;
+    }
+
+    private void Start()
+    {
+        SetMovement();
+    }
+
+    private void SetMovement()
+    {
+        int baseMove = op.Injured ? op.GetMoveSpeed() - 1 : op.GetMoveSpeed();
+        opMoveDist = baseMove * Constants.inch * 2;
     }
 
     void Update()
     {
-
-        if (isActive)
-        {
-            if (Touchscreen.current.primaryTouch.IsPressed())
-            {
-                if (EventSystem.current.IsPointerOverGameObject()) return;
-                if (!moving)
-                {
-                    SetStartPos();
-                    ManageLimitingJoint(true);
-                    moving = true;
-                }
-
-            }
-            if (Input.GetMouseButton(0))
-            {
-                if (moving) MoveOperative(new Vector3(0,0,0)); //MouseWorld
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                if (moving)
-                {
-                    ManageLimitingJoint(false);
-                    ChangeRemainingMove(op.transform.position);
-                }
-                moving = false;
-            }
-        }
-
-    }
-
-    public void MoveOperative(Vector2 pos)
-    {
-        Vector2 distance = (Vector2) startingPosition - pos;
-        distMoved = distance.magnitude;
-
-        if (distMoved > opMoveDist) return;
-        else if (opMoveDist == 0) return;
-        else op.GetOpBase().MovePosition(pos + (Vector2)offset);
     }
 
     public void ManageLimitingJoint(bool enableJoint)
     {
+        if (!isActive) return;
+        Debug.Log("Managing the limiter " + enableJoint);
         if (enableJoint)
         {
             limiter.connectedAnchor = op.transform.position;
@@ -85,19 +60,26 @@ public class MoveAction : BaseAction
 
     public void SetStartPos()
     {
+        Debug.Log("Starting Position op this move " + op.transform.position);
         startingPosition = op.transform.position;
-        offset = startingPosition - new Vector3(0,0,0); //MouseWorld.GetTouchPosition();
     }
 
-    public void ChangeRemainingMove(Vector3 endPos)
+    public void ChangeRemainingMove()
     {
-        if (opMoveDist > 0)
+        if (opMoveDist > 0 & isActive)
         {
-            float inchesMoved = (startingPosition - endPos).magnitude / Constants.inch;
+            float inchesMoved = (startingPosition - op.transform.position).magnitude / Constants.inch;
             inchesMoved = Mathf.Ceil(inchesMoved);
             Debug.Log("Inches Moved: " + inchesMoved);
             opMoveDist -= (inchesMoved * Constants.inch);
             Debug.Log("Movement Left: " + opMoveDist);
+
+
+            if (opMoveDist == 0)
+            {
+                dragger.enabled = false;
+                op.UseActionPoints(1);
+            }
         }
     }
 
@@ -107,12 +89,24 @@ public class MoveAction : BaseAction
     }
 
     public void ResetMovement(){
-        opMoveDist = op.GetMoveSpeed() * Constants.inch * 2;
+        SetMovement();
+        if (isActive)
+        {
+            dragger.enabled = true;
+        }
     }
 
     public override void SetActive()
     {
+        Debug.Log("Starting Position " + op + " " + op.transform.position);
         originalPosition = op.transform.position;
         base.SetActive();
+        dragger.enabled = true;
+    }
+
+    public override void SetInactive()
+    {
+        base.SetInactive();
+        dragger.enabled = false;
     }
 }

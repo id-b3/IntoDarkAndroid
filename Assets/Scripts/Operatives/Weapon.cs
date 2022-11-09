@@ -1,27 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Weapon : MonoBehaviour
+public class Weapon
 {
+    public string WeaponName { get; private set; }
+    public int Attacks { get; private set; }
+    public int Skill { get; private set; }
+    public int DamageNorm { get; private set; }
+    public int DamageCrit { get; private set; }
+    public int SpecialRule { get; private set; }
+    public int CritRule { get; private set; }
+    public bool Ranged { get; private set; }
 
-    [SerializeField] private string weaponName;
-    [SerializeField] private int attacks;
-    [SerializeField] private int skill;
-    [SerializeField] private int damageNorm;
-    [SerializeField] private int damageCrit;
-    [SerializeField] private int specialRule;
-    [SerializeField] private int critRule;
-
-    // Start is called before the first frame update
-    void Start()
+    public Weapon(bool ranged, string name, int A, int S, int DN, int DC)
     {
-        
+        Ranged = ranged;
+        WeaponName = name;
+        Attacks = A;
+        Skill = S;
+        DamageNorm = DN;
+        DamageCrit = DC;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
